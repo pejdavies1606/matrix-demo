@@ -34,7 +34,7 @@ class Matrix
        */
       T* operator[](int row)
       {
-         return &data[row * cols];
+         return &this->data[row * this->cols];
       }
 
       /*
@@ -44,19 +44,23 @@ class Matrix
       {
          if (&m != this) 
          {
-            if (rows != m.rows ||
-                cols != m.cols) 
+            if (this->rows != m.rows ||
+                this->cols != m.cols) 
             {
-               delete []data;
-               rows = m.rows;
-               cols = m.cols;
-               data = new T[rows * cols];
-               assert( data != NULL );
+               delete []this->data;
+               this->rows = m.rows;
+               this->cols = m.cols;
+               this->data = new T[this->rows * this->cols];
+               if(!this->data)
+               {
+                  throw std::runtime_error(
+                     "memory error");
+               }
             }
             std::copy(
                   m.data,
                   m.data + (m.rows * m.cols),
-                  data);
+                  this->data);
          }
          return *this;
       }
@@ -184,15 +188,15 @@ findMax()
    int max_i = 0;
    int max_j = 0;
    T max = (T) 0;
-   if (rows > 0 &&
-       cols > 0 &&
-       data)
+   if (this->rows > 0 &&
+       this->cols > 0 &&
+       this->data)
    {
-      for (int i = 0; i < rows; i++)
+      for (int i = 0; i < this->rows; i++)
       {
-         for (int j = 0; j < cols; j++)
+         for (int j = 0; j < this->cols; j++)
          {
-            T val = data[i*cols + j];
+            T val = this->data[i*this->cols + j];
             if (val > max)
             {
                max = val;
